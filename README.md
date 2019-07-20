@@ -1,3 +1,7 @@
 # jest-tests
+_Implemented using Jest Testing library for JavaScript_
 
-_Tests can be found in `/src/CartParser.test.js`_
+There are two types of tests coveres in this project: **unit-tests** and **integration-tests**. 
+
+Both can be found in `/src/CartParser.test.js`. 
+
