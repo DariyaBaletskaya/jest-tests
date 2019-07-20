@@ -1,8 +1,7 @@
 import CartParser from "./CartParser";
-import cart from "../samples/cart";
 
-//replace with your own absolute path to file cart-errors.csv
-const ABSOLUTE_PATH = "C:/Users/Dariya/Desktop/BSA8";
+//replace with your own absolute path
+const ABSOLUTE_PATH = "YOUR PATH";
 let parser, validate, parseLine, parse, readFile;
 let errorHeaderSample,
   errorRowCellsSample,
