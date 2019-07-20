@@ -1,5 +1,5 @@
 import CartParser from "./CartParser";
-//import { isMainThread } from "worker_threads";
+import cart from "../samples/cart";
 
 //replace with your own absolute path to file cart-errors.csv
 const ABSOLUTE_PATH = "C:/Users/Dariya/Desktop/BSA8";
@@ -7,14 +7,18 @@ let parser, validate, parseLine, parse, readFile;
 let errorHeaderSample,
   errorRowCellsSample,
   errorCellStringSample,
-  errorCellNumberSample;
+  errorCellNumberSample,
+  correctSample;
 let contentHeaderError,
   contentRowCellsError,
   contentCellStringError,
   contentCellNumberError,
+  contentCorrect,
   csvLine;
+let jsonCart;
 
 beforeAll(() => {
+  correctSample = `${ABSOLUTE_PATH}/BSA2019-Testing/samples/cart.csv`;
   errorHeaderSample = `${ABSOLUTE_PATH}/BSA2019-Testing/samples/cart-header-error.csv`;
   errorRowCellsSample = `${ABSOLUTE_PATH}/BSA2019-Testing/samples/cart-rowcells-error.csv`;
   errorCellStringSample = `${ABSOLUTE_PATH}/BSA2019-Testing/samples/cart-cell-string-error.csv`;
@@ -33,12 +37,12 @@ describe("CartParser - unit tests", () => {
   beforeEach(() => {
     //given
     csvLine = `Mollis consequat,9.00,2`;
+    contentCorrect = parser.readFile(correctSample);
     contentHeaderError = parser.readFile(errorHeaderSample);
     contentRowCellsError = parser.readFile(errorRowCellsSample);
     contentCellStringError = parser.readFile(errorCellStringSample);
     contentCellNumberError = parser.readFile(errorCellNumberSample);
   });
-  // Add your unit tests here.
   it("should returned object with defined properties after parsing", () => {
     //when
     let parsedLine = parser.parseLine(csvLine);
@@ -97,9 +101,56 @@ describe("CartParser - unit tests", () => {
       /Expected cell to be a positive number /
     );
   });
+
+  it("should return an empty array, as the content of the file is correct", () => {
+    //when
+    let validation = parser.validate(contentCorrect);
+    //then
+    expect(validation).toEqual(expect.arrayContaining([]));
+  });
 });
 
 describe("CartParser - integration test", () => {
-  beforeEach(() => {});
-  // Add your integration test here.
+  it("should return an empty array, as the content of the file is correct", () => {
+    //given
+    let expectedCart = {
+      items: [
+        {
+          id: expect.stringMatching(/^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}/),
+          name: "Mollis consequat",
+          price: 9,
+          quantity: 2
+        },
+        {
+          id: expect.stringMatching(/^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}/),
+          name: "Tvoluptatem",
+          price: 10.32,
+          quantity: 1
+        },
+        {
+          id: expect.stringMatching(/^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}/),
+          name: "Scelerisque lacinia",
+          price: 18.9,
+          quantity: 1
+        },
+        {
+          id: expect.stringMatching(/^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}/),
+          name: "Consectetur adipiscing",
+          price: 28.72,
+          quantity: 10
+        },
+        {
+          id: expect.stringMatching(/^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}/),
+          name: "Condimentum aliquet",
+          price: 13.9,
+          quantity: 1
+        }
+      ],
+      total: 348.32
+    };
+    //when
+    let parsedCart = parser.parse(correctSample);
+    //then
+    expect(parsedCart).toMatchObject(expectedCart);
+  });
 });
