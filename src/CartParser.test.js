@@ -15,7 +15,6 @@ let contentHeaderError,
   contentCellNumberError,
   contentCorrect,
   csvLine;
-let jsonCart;
 
 beforeAll(() => {
   correctSample = `${ABSOLUTE_PATH}/BSA2019-Testing/samples/cart.csv`;
